@@ -1,0 +1,50 @@
+<html lang='en'>
+<head>
+  <meta charset="utf-8" />
+  <title>BIOAlg</title>
+  <link type="text/css" rel="stylesheet"
+        href="{{ url_for('static',
+              filename='bootstrap.css')}}" />
+<script type="text/javascript" src="{{ url_for('static', 
+filename = 'bootstrap.js') }}" ></script>
+<script type="text/javascript" src="{{ url_for('static', 
+filename = 'jquery-3.4.1.min.js') }}" ></script>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <a class="navbar-brand" href="#">DNA as a storage</a>
+
+    </button>
+  
+  </nav>
+
+<div class="container">
+
+<hr class="my-3">
+
+                          <h5 class="display-5"><center><a href="../algorithms">Crucial Parts</a> &#8594;{{title}} </center></h5>
+
+<hr class="my-3">
+
+</div>
+{% block content %}
+{% endblock %}
+<br>
+<br>
+<br>
+<br>
+<!-- Footer -->
+<footer class="navbar-dark page-footer bottom font-small blue">
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2019 Copyright:
+      <a href="https://www.linkedin.com/in/feeka/"> Fikrat Talibli.</a>
+      Contact me via email: fikrattalibli@gmail.com
+    </div>
+    <!-- Copyright -->
+  
+  </footer>
+  <!-- Footer -->
+</body>
+</html>

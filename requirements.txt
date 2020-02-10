@@ -1,0 +1,5 @@
+networkx
+termcolor
+flask
+flask-wtf
+wtforms
