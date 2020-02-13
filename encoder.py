@@ -1,18 +1,8 @@
 from f_four import F_Four
 
 
-def mapper(message):
-	ecc_message = []
-	map_of_DNA = {'A':0,'C':1,'T':2,'G':3}	
-	for i in message:
-		ecc_message.append(map_of_DNA.get(i))
-	return ecc_message
-
-	
 def vec_mat(vec,M):
 	vec_res =[]
-	print(M)
-
 	transposed =list(zip(*M))
 	transposed_new = []
 	for vecs in transposed:
@@ -45,9 +35,8 @@ def make_polynom(degree,positions):
 				j = j+1
 		else:
 			polynom.append(0)
-	
-	polynom.reverse()
 
+	polynom.reverse()
 	return polynom
 
 
@@ -58,11 +47,14 @@ def construct_generator_matrix(msg_length,polynom):
 	g_m =[]
 	for i in range(len(generator_matrix)):
 		g_m.append([0]*i + generator_matrix[i] + [0]*(msg_length-i-1))
-		
 	return g_m
 
 def encode(degree,positions,message):
 	polynom = make_polynom(degree,positions)
 	gen_mat = construct_generator_matrix(len(message),polynom)
 	code = vec_mat(message,gen_mat)
+	with open('generator.txt', 'w') as f:
+		for item in gen_mat:
+			f.write("%s\n" % item)
+
 	return code

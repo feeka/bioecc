@@ -1,7 +1,10 @@
-from encoder import *
-from flask import request, render_template, redirect, flash, url_for, Flask
-from forms import *
+from repetition_code import *
+#from flask import request, render_template, redirect, flash, url_for, Flask
+#from forms import *
+from ecc_bio_interface import *
+from codeword_detector import *
 
+"""
 app = Flask(__name__)
 
 ALGORITHMS=[
@@ -28,7 +31,7 @@ def encoder():
 		print(type(degree))
 		positions=form.positions.data
 		actual_positions = []
-		
+
 		for i in positions:
 			actual_positions.append(int(i))
 		print(actual_positions)
@@ -36,9 +39,50 @@ def encoder():
 		print(result)
 		return render_template('encoder.html',title="Encoded word", form=form, result=result)
 	return render_template('encoder.html',title="Encoder ", form=form)
+"""
+#app.run('0.0.0.0',8080)
+message1 = [1,2,3,2,1,3]
+message2 = [2,3,3,1,1,3]
+k= len(message1)
+messages = []
+messages.append(message1)
+messages.append(message2)
 
-app.run('0.0.0.0',8080)
-message = [1,2,3,2,1,3]
+codewords = []
+polynom = [0,2,3]
+degree = 3
+#--------------WE ENCODE MESSAGES-------------------#
+codewords = encode_messages(messages,polynom,degree)
+for i in codewords:
+    print("c_"+str(codewords.index(i))+"=",i)
+n=len(codewords[0])
+l = 2
 
-code = encode(3,[0,2,3],message)
-print(code)
+#--------------WE CREATE REPETITION CODES-------------------#
+repetition_code = repeat_codewords(codewords,l)
+
+print("\n","--------------------------------------","\n")
+for i in codewords:
+    print(("c_"+str(codewords.index(i)))*2,"=",i)
+
+# ----WE JOIN ALL CODEWORDS IN ONE SEQUENCE----#
+joined_codewords = join_for_synthesis(codewords)
+
+# ----WE MAP ECC SEQUENCE TO BIO SEQUENCE----#
+dna_seq_to_synthesise = map_codewords(joined_codewords)
+print(dna_seq_to_synthesise)
+
+# ----WE PUT SEQUENCE THROUGH BIO-BOX----#
+shuffle = synthesise_and_shuffle(dna_seq_to_synthesise,n)
+print(shuffle)
+
+# ----WE REMAP ALL n-MERS to OUR {0123}----#
+shuffled_codewords = remap_shuffle(shuffle)
+print(shuffled_codewords)
+#----INTERMEDIATE STEP FOR FURTHER CALCULATION-----#
+doubled_array = transpose_vector(shuffled_codewords)
+h_mat = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
+print("H_MAT: ",h_mat)
+
+#---DETECT WHETHER CODEWORD----------------------#
+perform_calculation_to_check(h_mat,doubled_array)
