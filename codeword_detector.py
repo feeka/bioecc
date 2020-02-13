@@ -144,7 +144,6 @@ def perform_calculation_to_check(mtx_after_rref,codewords):
 
 def g_to_h(matrix,n,k):
 	matrix_P = matrix[len(matrix)-(n-k):len(matrix)]
-	for i in
 
 
 mtx = [[1, 1, 0, 1, 0, 0, 0, 0, 0],

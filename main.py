@@ -49,14 +49,14 @@ messages.append(message1)
 messages.append(message2)
 
 codewords = []
-polynom = [0,1,3]
+polynom = [0,2,3]
 degree = 3
 #--------------WE ENCODE MESSAGES-------------------#
 codewords = encode_messages(messages,polynom,degree)
 for i in codewords:
     print("c_"+str(codewords.index(i))+"=",i)
 n=len(codewords[0])
-l = 3
+l = 2
 
 #--------------WE CREATE REPETITION CODES-------------------#
 repetition_code = repeat_codewords(codewords,l)
