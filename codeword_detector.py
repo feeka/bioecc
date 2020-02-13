@@ -1,5 +1,7 @@
 from f_four import F_Four
 from ecc_bio_interface import *
+
+
 def make_one_vector(multivector):
 	one_vector = []
 	for double_vector in multivector:
@@ -9,28 +11,6 @@ def make_one_vector(multivector):
 		one_vector.append(element)
 	return one_vector
 
-def vec_mat(vec,M):
-	vec_res =[]
-
-	transposed =M
-
-	transposed_new = []
-	for vecs in transposed:
-		els = []
-		for i in vecs:
-			els.append(F_Four(i))
-		transposed_new.append(els)
-	vec_new = []
-	for i in vec:
-		vec_new.append(F_Four(i))
-	for i in range(len(transposed_new)):
-		summa=F_Four(0)
-		for j in range(len(transposed_new[0])):
-			umnoj = vec_new[j] * transposed_new[i][j]
-			summa = summa + F_Four(umnoj)
-			summa = F_Four(summa)
-		vec_res.append(summa.n)
-	return vec_res
 
 def matrixmult (A, B):
 	rows_A = len(A)
@@ -63,6 +43,38 @@ def matrixmult (A, B):
 				intermediate = F_Four(A_new[i][k] * B_new[k][j])
 				C[i][j] = intermediate +C[i][j]
 	return C
+# transpose :: Matrix a -> Matrix a
+def transpose(m):
+    if m:
+        inner = type(m[0])
+        z = zip(*m)
+        return (type(m))(
+            map(inner, z) if tuple != inner else z
+        )
+    else:
+        return m
+
+def vec_mat(vec,M):
+	vec_res =[]
+	transposed =list(zip(*M))
+	transposed_new = []
+	for vecs in transposed:
+		els = []
+		for i in vecs:
+			els.append(F_Four(i))
+		transposed_new.append(els)
+	vec_new = []
+	for i in vec:
+		vec_new.append(F_Four(i))
+	for i in range(len(transposed_new)):
+		summa=F_Four(0)
+		for j in range(len(transposed_new[0])):
+			umnoj = vec_new[j] * transposed_new[i][j]
+			summa = summa + F_Four(umnoj)
+			summa = F_Four(summa)
+		vec_res.append(summa.n)
+	return vec_res
+
 
 def rref( M):
     if not M: return
@@ -109,29 +121,30 @@ def rref( M):
 
 def check_whether_codeword(list1):
 	for x in list1:
-		for i in x:
-			if i!= 0:
-				return False
+		if x!= 0:
+			return False
 	return True
 
 def perform_calculation_to_check(mtx_after_rref,codewords):
 	list_of_cws=[]
 	list_of_non_cws=[]
 	for vector in codewords:
-		res=matrixmult(mtx_after_rref,vector)
-		one_vector = make_one_vector(vector)
+		res=vec_mat(vector,transpose(mtx_after_rref))
 		if check_whether_codeword(res):
 			print("------------#################------------------")
-			list_of_cws.append(res)
-			print(str(mapper(one_vector)),"is a", "codeword".upper())
+			list_of_cws.append(vector)
+			print(str(mapper(vector)),"is a", "codeword".upper())
 			print("------------#################------------------")
 
 		else:
-			list_of_non_cws.append(res)
-			print(mapper(one_vector), "is not a codeword")
+			list_of_non_cws.append(vector)
+			print(mapper(vector), "is not a codeword")
 
 	return (list_of_cws, list_of_non_cws)
 
+def g_to_h(matrix,n,k):
+	matrix_P = matrix[len(matrix)-(n-k):len(matrix)]
+	for i in
 
 
 mtx = [[1, 1, 0, 1, 0, 0, 0, 0, 0],
@@ -149,8 +162,9 @@ for i in mtx:
     mtx_new.append(row)
 
 rref(mtx_new)
+print("Systematic:",mtx_new)
 mtx_after_rref = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
-print(mtx_new)
+
 b=[2, 1, 0, 0, 3, 1, 2, 1, 3]
 c = [3, 1, 0, 1, 1, 1, 1, 3, 1]
 res=matrixmult(mtx_after_rref,[[3],[1], [0], [1], [1], [1], [1], [3], [1]])
@@ -160,3 +174,14 @@ if flag:
 else:
 	print("Not codeword")
 print(res)
+h_mat = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
+g_mat = [[1, 0, 1, 1, 0, 0, 0, 0, 0],
+[0, 1, 0, 1, 1, 0, 0, 0, 0],
+[0, 0, 1, 0, 1, 1, 0, 0, 0],
+[0, 0, 0, 1, 0, 1, 1, 0, 0],
+[0, 0, 0, 0, 1, 0, 1, 1, 0],
+[0, 0, 0, 0, 0, 1, 0, 1, 1]
+]
+rref(g_mat)
+print("resultat",matrixmult(g_mat,transpose(h_mat)))
+print(vec_mat(c,transpose(h_mat)))
