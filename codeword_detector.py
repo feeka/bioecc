@@ -1,6 +1,17 @@
 from f_four import F_Four
 from ecc_bio_interface import *
+"""Codeword detection
 
+This script allows the user to detect whether code or not by applying various 
+algebraic operations  
+
+    * matrixmult - multiply 2 matrixes and return result in F_Four
+    * transpose - transpose matrix and return result in F_Four
+    * vec_mat - multiply vector by matrix  and return result in F_Four
+    * rref - bring matrix to reduced row echelon form (helper function) - pass-by-value principle
+    * check_whether_codeword - looks whether syndrome is equal to 0v - returns boolean
+    * 
+"""
 
 def make_one_vector(multivector):
 	one_vector = []
@@ -143,20 +154,40 @@ def perform_calculation_to_check(mtx_after_rref,codewords):
 
 	return (list_of_cws, list_of_non_cws)
 
-def g_to_h(matrix,n,k):
-	matrix_G_systematic=rref(matrix)
-	
-	matrix_P = matrix[len(matrix_G)-(n-k):len(matrix_G)]
+"""
+In
+"""
+def g_and_h(matrix,n,k):
+	rref(matrix)
+	matrix_A = []
+	print("sysmat",matrix)
+	for i in range(len(matrix)):
+		row =[]
+		for j in range(k,n):
+			row.append(matrix[i][j])
+		matrix_A.append(row)
+	matrix_H = transpose(matrix_A)
+	print(matrix_H)
+	counter = k
+	for i in range(0,len(matrix_H)):
+		row = []
+		for j in range(k,n):
+			if(counter==j):
+				matrix_H[i].append(1)
+				continue
+			matrix_H[i].append(0)
+		counter+=1
+	return (matrix_H, matrix)
 
 
+#mtx = [[1, 1, 0, 1, 0, 0, 0, 0, 0],
+#        [0, 1, 1, 0, 1, 0, 0, 0, 0],
+#        [0, 0, 1, 1, 0, 1, 0, 0, 0],
+#        [0, 0, 0, 1, 1, 0, 1, 0, 0],
+#        [0, 0, 0, 0, 1, 1, 0, 1, 0],
+#        [0, 0, 0, 0, 0, 1, 1, 0, 1]]
 
-mtx = [[1, 1, 0, 1, 0, 0, 0, 0, 0],
-        [0, 1, 1, 0, 1, 0, 0, 0, 0],
-        [0, 0, 1, 1, 0, 1, 0, 0, 0],
-        [0, 0, 0, 1, 1, 0, 1, 0, 0],
-        [0, 0, 0, 0, 1, 1, 0, 1, 0],
-        [0, 0, 0, 0, 0, 1, 1, 0, 1]]
-
+mtx = [[1,0,0,1,1],[0,1,0,0,1],[0,0,1,1,0]]
 mtx_new = []
 for i in mtx:
     row = []
@@ -186,6 +217,6 @@ g_mat = [[1, 0, 1, 1, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 1, 0, 1, 1, 0],
 [0, 0, 0, 0, 0, 1, 0, 1, 1]
 ]
-rref(g_mat)
+print("H_MAT=",g_and_h(g_mat,9,6)[0])
 print("resultat",matrixmult(g_mat,transpose(h_mat)))
 print(vec_mat(b,transpose(h_mat)))
