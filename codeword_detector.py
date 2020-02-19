@@ -131,19 +131,23 @@ def perform_calculation_to_check(mtx_after_rref,codewords):
 	for vector in codewords:
 		res=vec_mat(vector,transpose(mtx_after_rref))
 		if check_whether_codeword(res):
-			print("------------#################------------------")
+			print("--------",res,"----------")
 			list_of_cws.append(vector)
-			print(str(mapper(vector)),"is a", "codeword".upper())
+			print(str((vector)),"is a", "codeword".upper())
 			print("------------#################------------------")
 
 		else:
+			print("\n--------",res,"----------")
 			list_of_non_cws.append(vector)
-			print(mapper(vector), "is not a codeword")
+			print((vector), "is not a codeword")
 
 	return (list_of_cws, list_of_non_cws)
 
 def g_to_h(matrix,n,k):
-	matrix_P = matrix[len(matrix)-(n-k):len(matrix)]
+	matrix_G_systematic=rref(matrix)
+	
+	matrix_P = matrix[len(matrix_G)-(n-k):len(matrix_G)]
+
 
 
 mtx = [[1, 1, 0, 1, 0, 0, 0, 0, 0],
@@ -164,7 +168,7 @@ rref(mtx_new)
 print("Systematic:",mtx_new)
 mtx_after_rref = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
 
-b=[2, 1, 0, 0, 3, 1, 2, 1, 3]
+b=[3,2, 1, 0, 0, 3, 1, 2, 1]
 c = [3, 1, 0, 1, 1, 1, 1, 3, 1]
 res=matrixmult(mtx_after_rref,[[3],[1], [0], [1], [1], [1], [1], [3], [1]])
 flag = check_whether_codeword(res)
@@ -174,6 +178,7 @@ else:
 	print("Not codeword")
 print(res)
 h_mat = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
+
 g_mat = [[1, 0, 1, 1, 0, 0, 0, 0, 0],
 [0, 1, 0, 1, 1, 0, 0, 0, 0],
 [0, 0, 1, 0, 1, 1, 0, 0, 0],
@@ -183,4 +188,4 @@ g_mat = [[1, 0, 1, 1, 0, 0, 0, 0, 0],
 ]
 rref(g_mat)
 print("resultat",matrixmult(g_mat,transpose(h_mat)))
-print(vec_mat(c,transpose(h_mat)))
+print(vec_mat(b,transpose(h_mat)))

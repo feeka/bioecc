@@ -56,5 +56,4 @@ def encode(degree,positions,message):
 	with open('generator.txt', 'w') as f:
 		for item in gen_mat:
 			f.write("%s\n" % item)
-
 	return code

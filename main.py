@@ -40,6 +40,22 @@ def encoder():
 		return render_template('encoder.html',title="Encoded word", form=form, result=result)
 	return render_template('encoder.html',title="Encoder ", form=form)
 """
+def read_from_file(filename):
+    file1 = open(filename, 'r')
+    g_m=[]
+    for line in file1:
+        g_m.append(list(line[1:len(line)-2]))
+    gen_mat=[]
+    for i in g_m:
+        row =[]
+        for j in i:
+            if j=="," or j==" ":
+                continue
+            row.append(int(j))
+        gen_mat.append(row)
+    return gen_mat
+
+
 #app.run('0.0.0.0',8080)
 message1 = [1,2,3,2,1,3]
 message2 = [2,3,3,1,1,3]
@@ -51,10 +67,12 @@ messages.append(message2)
 codewords = []
 polynom = [0,2,3]
 degree = 3
+g_m =[]
 #--------------WE ENCODE MESSAGES-------------------#
-codewords = encode_messages(messages,polynom,degree)
+codewords = encode_messages(messages,polynom,degree,g_m)
 for i in codewords:
     print("c_"+str(codewords.index(i))+"=",i)
+print("->",g_m)
 n=len(codewords[0])
 l = 2
 
@@ -82,7 +100,9 @@ print(shuffled_codewords)
 #----INTERMEDIATE STEP FOR FURTHER CALCULATION-----#
 doubled_array = transpose_vector(shuffled_codewords)
 h_mat = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
+for i in h_mat:
+    print(i)
 print("H_MAT: ",h_mat)
-
+print(read_from_file("generator.txt"))
 #---DETECT WHETHER CODEWORD----------------------#
 perform_calculation_to_check(h_mat,shuffled_codewords)
