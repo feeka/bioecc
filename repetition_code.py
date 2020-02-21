@@ -1,9 +1,8 @@
 from encoder import *
 from ecc_bio_interface import *
 
-def encode_messages(messages,poly_poses,degree,g_m):
+def encode_messages(messages,poly_poses,degree):
     codewords = []
-    print("--->",g_m)
     for i in range(len(messages)):
         codewords.append(encode(degree,poly_poses,messages[i]))
     return codewords

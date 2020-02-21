@@ -1,6 +1,5 @@
 from f_four import F_Four
 
-
 def vec_mat(vec,M):
 	vec_res =[]
 	transposed =list(zip(*M))
@@ -50,10 +49,9 @@ def construct_generator_matrix(msg_length,polynom):
 	return g_m
 
 def encode(degree,positions,message):
-	polynom = make_polynom(degree,positions)
-	gen_mat = construct_generator_matrix(len(message),polynom)
-	code = vec_mat(message,gen_mat)
+	g_matr = construct_generator_matrix(len(message),positions)
+	code = vec_mat(message,g_matr)
 	with open('generator.txt', 'w') as f:
-		for item in gen_mat:
+		for item in g_matr:
 			f.write("%s\n" % item)
 	return code

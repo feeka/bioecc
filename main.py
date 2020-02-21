@@ -3,7 +3,7 @@ from repetition_code import *
 #from forms import *
 from ecc_bio_interface import *
 from codeword_detector import *
-
+from encoder import construct_generator_matrix, make_polynom
 """
 app = Flask(__name__)
 
@@ -57,25 +57,25 @@ def read_from_file(filename):
 
 
 #app.run('0.0.0.0',8080)
-message1 = [1,2,3,2,1,3]
-message2 = [2,3,3,1,1,3]
+message1 = [1, 2, 3, 2, 1, 3, 3, 1, 1, 2, 3]
+message2 = [2, 3, 3, 1, 1, 3, 1, 2, 3, 2, 1]
 k= len(message1)
 messages = []
 messages.append(message1)
 messages.append(message2)
 
 codewords = []
-polynom = [0,2,3]
+polynom = [1,1,1,2,3]
 degree = 3
-g_m =[]
+g_m = construct_generator_matrix(k,polynom)
+print("G_MAT",g_m)
 #--------------WE ENCODE MESSAGES-------------------#
-codewords = encode_messages(messages,polynom,degree,g_m)
+codewords = encode_messages(messages,polynom,degree)
 for i in codewords:
     print("c_"+str(codewords.index(i))+"=",i)
-print("->",g_m)
+
 n=len(codewords[0])
 l = 2
-
 #--------------WE CREATE REPETITION CODES-------------------#
 repetition_code = repeat_codewords(codewords,l)
 
@@ -96,13 +96,21 @@ print(shuffle)
 
 # ----WE REMAP ALL n-MERS to OUR {0123}----#
 shuffled_codewords = remap_shuffle(shuffle)
-print(shuffled_codewords)
+print("shuffled_codewords",shuffled_codewords)
+shuffled_codewords[2][3]=3
 #----INTERMEDIATE STEP FOR FURTHER CALCULATION-----#
 doubled_array = transpose_vector(shuffled_codewords)
-h_mat = [[0,0,1,0,1,1,1,0,0], [1, 0, 1, 1, 1, 0, 0, 1, 0], [0, 1, 0, 1, 1, 1, 0, 0, 1]]
-for i in h_mat:
+
+h = g_and_h(g_m,n,k)[0]
+g_system = g_and_h(g_m,n,k)[1]
+print("###############H_MAT######################")
+for i in h:
     print(i)
-print("H_MAT: ",h_mat)
+print("###############G_MAT_systematic######################")
+for i in g_system:
+    print(i)
+print()
+print("H_MAT: ",h)
 print(read_from_file("generator.txt"))
 #---DETECT WHETHER CODEWORD----------------------#
-perform_calculation_to_check(h_mat,shuffled_codewords)
+perform_calculation_to_check(h,shuffled_codewords)
